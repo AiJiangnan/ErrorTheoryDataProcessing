@@ -15,8 +15,8 @@ icon;
 
 %% 界面控件
 % 设置文字项属性(11)
-t = [uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf)];
-ui_string = {'数据：','置信系数：','平均值：','标准差：','数据：','平均值：','标准差：','算术平均值标准差：','加权算术平均值：','加权算术平均值标准差：','结果：','±','残余误差分布图'};
+t = [uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf)];
+ui_string = {'数据：','置信系数：','平均值：','标准差：','数据：','平均值：','标准差：','算术平均值标准差：','加权算术平均值：','加权算术平均值标准差：','权：','结果：','±','残余误差分布图'};
 ui_position = [20,405,80,25%L1
                       20,350,80,25%L2
 					  20,320,80,25%L2
@@ -27,9 +27,10 @@ ui_position = [20,405,80,25%L1
                       20,260,130,25%L4
                       380,260,130,25%L5
                       20,230,180,25%R4
+                      380,230,180,25
                       20,10,130,25%B1
                       205,10,10,25%B2
-                      550,220,150,20];%R4
+                      560,190,100,20];%R4
 
 for i = 1:length(t)
     set(t(i),...
@@ -44,8 +45,9 @@ for i = 1:length(t)
 end
 
 % 输入数据文本框(10)
-e = [uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf)];
-e_position = [100,380,240,50%L1
+e = [uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf)];
+e_position = [450,230,240,25
+                     100,380,240,50%L1
                      100,350,240,25%L2
 					 100,320,240,25%L2
                      100,290,240,25%L3
@@ -56,7 +58,8 @@ e_position = [100,380,240,50%L1
                      160,260,180,25%L4
                      450,310,240,25%L5
                      100,10,100,25%B1
-                     220,10,100,25];%B2
+                     220,10,100,25
+                     ];%B2
 
 for i = 1:length(e)
     set(e(i),...
@@ -67,11 +70,14 @@ for i = 1:length(e)
         'HorizontalAlignment','left',...
         'BackgroundColor','White');
 end
-for i = 3:length(e)
+for i = 4:length(e)
     set(e(i),'Enable','inactive');
+    % set(e(i),'String',i);
 end
-set(e(1),'Min',1,'Max',3);
-set(e(5),'Min',1,'Max',3);
+set(e(1),'Enable','inactive');
+set(e(2),'Enable','inactive');
+set(e(2),'Min',1,'Max',3);
+set(e(6),'Min',1,'Max',3);
 
 
 % 面板
@@ -116,7 +122,7 @@ axes('Units','pixels',...
         'Tag','axes');
 
 % obj = findobj(gcf);
-% for i = 9:20
+% for i = 9:21
 %     set(obj(i),'String',i);
 % end
 
@@ -138,12 +144,17 @@ set(obj(20),'String',data_cell{val});
 axes(obj(2));
 plot(v2{val},'-o');
 
+set(obj(21),'String',p(val));
 set(obj(18),'String',a1(val));
 set(obj(17),'String',s1(val));
 set(obj(16),'String',data1{val});
 set(obj(15),'String',a2(val));
+set(obj(14),'String',s_x_);
+set(obj(13),'String',x_);
 set(obj(12),'String',s2_x(val));
 set(obj(11),'String',s2(val));
+set(obj(10),'String',x(1));
+set(obj(9),'String',x(2));
 
 function run1(~,~)
 global data_cell;
@@ -160,6 +171,7 @@ end
 axes(obj(2));
 plot(v2{1},'-o');
 
+set(obj(21),'String',p(1));
 set(obj(18),'String',a1(1));
 set(obj(17),'String',s1(1));
 set(obj(16),'String',data1{1});
@@ -204,16 +216,19 @@ set(obj(20),'String',data(1,:));
 
 function outp(~,~)
 obj = findobj(gcf);
-header = {'数据','置信系数','平均值','标准差','剔除粗大误差后平均值','剔除粗大误差后标准差','算术平均值标准差','结果'};
+header = {'数据','置信系数','平均值','标准差','剔除粗大误差后平均值','剔除粗大误差后标准差','算术平均值标准差','数据的权','加权算术平均值','加权算术平均值标准差','结果'};
 a = num2str(get(obj(3),'Value'));
-b = num2str(get(obj(17),'String'));
-c = num2str(get(obj(16),'String'));
-d = num2str(get(obj(15),'String'));
-e = num2str(get(obj(13),'String'));
-f = num2str(get(obj(12),'String'));
-g = num2str(get(obj(11),'String'));
-h = num2str(get(obj(10),'String'));
-i = num2str(get(obj(9),'String'));
-values = {strcat('数据',a),b,c,d,e,f,g,strcat(h,'±',i)};
+b = num2str(get(obj(19),'String'));
+c = num2str(get(obj(18),'String'));
+d = num2str(get(obj(17),'String'));
+e = num2str(get(obj(15),'String'));
+f = num2str(get(obj(11),'String'));
+g = num2str(get(obj(12),'String'));
+h = num2str(get(obj(21),'String'));
+i = num2str(get(obj(13),'String'));
+j = num2str(get(obj(14),'String'));
+k = num2str(get(obj(10),'String'));
+l = num2str(get(obj(9),'String'));
+values = {strcat('第',a,'组数据'),b,c,d,e,f,g,h,i,j,strcat(k,'±',l)};
 xlswrite(strcat(datestr(now,30),'.xls'),[header;values]);
 msgbox('保存成功','提示','warn');
