@@ -144,6 +144,9 @@ global data_cell;
 [FileName,PathName,FilterIndex] = uigetfile(...
     {'*.txt','Text Data Files(*.txt)';...
      '*.xls','Excel ¹¤×÷±¡(*.xls)'});
+if FileName==0
+    return;
+end
 if FilterIndex==1
 	data = load(strcat(PathName,FileName));
 else
