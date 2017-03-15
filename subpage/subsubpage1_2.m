@@ -14,9 +14,9 @@ hf = figure('Name','不等精度测量数据误差分析',...
 icon;
 
 %% 界面控件
-%设置文字项属性(11)
-t = [uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf)];
-ui_string = {'数据：','置信系数：','平均值：','标准差：','数据：','平均值：','标准差：','算术平均值标准差：','结果：','±','残余误差分布图'};
+% 设置文字项属性(11)
+t = [uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf)];
+ui_string = {'数据：','置信系数：','平均值：','标准差：','数据：','平均值：','标准差：','算术平均值标准差：','加权算术平均值：','加权算术平均值标准差：','结果：','±','残余误差分布图'};
 ui_position = [20,405,80,25%L1
                       20,350,80,25%L2
 					  20,320,80,25%L2
@@ -25,9 +25,11 @@ ui_position = [20,405,80,25%L1
                       380,340,80,25%R2
 					  380,310,80,25%R3
                       20,260,130,25%L4
+                      380,260,130,25%L5
+                      20,230,180,25%R4
                       20,10,130,25%B1
                       205,10,10,25%B2
-                      550,250,150,20];%R4
+                      550,220,150,20];%R4
 
 for i = 1:length(t)
     set(t(i),...
@@ -42,15 +44,17 @@ for i = 1:length(t)
 end
 
 % 输入数据文本框(10)
-e = [uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf)];
+e = [uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf)];
 e_position = [100,380,240,50%L1
                      100,350,240,25%L2
 					 100,320,240,25%L2
                      100,290,240,25%L3
                      450,370,240,50%R1
                      450,340,240,25%R2
-                     450,310,240,25%R3
+                     180,230,160,25%R3/
+                     500,260,190,25%R3/
                      160,260,180,25%L4
+                     450,310,240,25%L5
                      100,10,100,25%B1
                      220,10,100,25];%B2
 
@@ -68,6 +72,7 @@ for i = 3:length(e)
 end
 set(e(1),'Min',1,'Max',3);
 set(e(5),'Min',1,'Max',3);
+
 
 % 面板
 uipanel(...
@@ -106,36 +111,63 @@ uicontrol(hf,...
     'FontSize',10);
 
 axes('Units','pixels',...
-        'Position',[30,60,650,190],...
+        'Position',[30,60,650,160],...
         'Box','on',...
         'Tag','axes');
+
+% obj = findobj(gcf);
+% for i = 9:20
+%     set(obj(i),'String',i);
+% end
 
 function data_cho(~,~)
 global data_cell;
 obj = findobj(gcf);
-val = get(obj(3),'Value');
-set(obj(18),'String',data_cell{val});
-
-function run1(~,~)
-obj = findobj(gcf);
-s1 = str2num(get(obj(18),'String'));
-s2 = str2num(get(obj(17),'String'));
+s1 = str2num(get(obj(20),'String'));
+s2 = str2num(get(obj(19),'String'));
 if isempty(s1)||isempty(s2)
 	warndlg('缺少输入参数！');
 	return;
 end
 
-[data1,v1,a,a1,s,s1,s1_x,x] = data_process1(s1,s2);
+[data1,v2,a1,a2,s1,s2,s2_x,p,x_,s_x_,x] = data_process2(data_cell,s2);
+obj = findobj(gcf);
+val = get(obj(3),'Value');
+set(obj(20),'String',data_cell{val});
 
 axes(obj(2));
-plot(v1,'-o');
+plot(v2{val},'-o');
 
-set(obj(16),'String',a);
-set(obj(15),'String',s);
-set(obj(14),'String',data1);
-set(obj(13),'String',a1);
-set(obj(12),'String',s1);
-set(obj(11),'String',s1_x);
+set(obj(18),'String',a1(val));
+set(obj(17),'String',s1(val));
+set(obj(16),'String',data1{val});
+set(obj(15),'String',a2(val));
+set(obj(12),'String',s2_x(val));
+set(obj(11),'String',s2(val));
+
+function run1(~,~)
+global data_cell;
+obj = findobj(gcf);
+s1 = str2num(get(obj(20),'String'));
+s2 = str2num(get(obj(19),'String'));
+if isempty(s1)||isempty(s2)
+	warndlg('缺少输入参数！');
+	return;
+end
+
+[data1,v2,a1,a2,s1,s2,s2_x,p,x_,s_x_,x] = data_process2(data_cell,s2);
+
+axes(obj(2));
+plot(v2{1},'-o');
+
+set(obj(18),'String',a1(1));
+set(obj(17),'String',s1(1));
+set(obj(16),'String',data1{1});
+set(obj(15),'String',a2(1));
+set(obj(14),'String',s_x_);
+set(obj(13),'String',x_);
+set(obj(12),'String',s2_x(1));
+set(obj(11),'String',s2(1));
 set(obj(10),'String',x(1));
 set(obj(9),'String',x(2));
 
@@ -143,7 +175,10 @@ function imp(~,~)
 global data_cell;
 [FileName,PathName,FilterIndex] = uigetfile(...
     {'*.txt','Text Data Files(*.txt)';...
-     '*.xls','Excel 工作薄(*.xls)'});
+    '*.xls','Excel 工作薄(*.xls)'});
+if FileName==0
+    return;
+end
 if FilterIndex==1
 	data = load(strcat(PathName,FileName));
 else
@@ -156,16 +191,16 @@ for i = 1:s(1)
 	a(isnan(a)) = [];
 	data_cell{i} = a;
 end
-tip = '数据1';
+tip = '第1组数据';
 tip_num = 1;
 for i=2:(s(1))
-	tip = strcat(tip,'|数据',num2str(i));
+	tip = strcat(tip,'|第',num2str(i),'组数据');
 	tip_num = [tip_num,i];
 end
 obj = findobj(gcf);
 set(obj(3),'String',tip);
 set(obj(3),'UserData',tip_num);
-set(obj(18),'String',data(1,:));
+set(obj(20),'String',data(1,:));
 
 function outp(~,~)
 obj = findobj(gcf);
