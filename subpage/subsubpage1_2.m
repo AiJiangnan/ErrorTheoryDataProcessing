@@ -53,13 +53,12 @@ e_position = [450,230,240,25
                      100,290,240,25%L3
                      450,370,240,50%R1
                      450,340,240,25%R2
-                     180,230,160,25%R3/
-                     500,260,190,25%R3/
+                     180,230,160,25%
+                     500,260,190,25%
                      160,260,180,25%L4
                      450,310,240,25%L5
                      100,10,100,25%B1
-                     220,10,100,25
-                     ];%B2
+                     220,10,100,25];%B2
 
 for i = 1:length(e)
     set(e(i),...
@@ -72,7 +71,6 @@ for i = 1:length(e)
 end
 for i = 4:length(e)
     set(e(i),'Enable','inactive');
-    % set(e(i),'String',i);
 end
 set(e(1),'Enable','inactive');
 set(e(2),'Enable','inactive');
@@ -120,11 +118,6 @@ axes('Units','pixels',...
         'Position',[30,60,650,160],...
         'Box','on',...
         'Tag','axes');
-
-% obj = findobj(gcf);
-% for i = 9:21
-%     set(obj(i),'String',i);
-% end
 
 function data_cho(~,~)
 global data_cell;
