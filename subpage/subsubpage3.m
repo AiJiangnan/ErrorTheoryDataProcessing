@@ -220,5 +220,3 @@ function outp(~,~)
 % values = {strcat('数据',a),b,c,d,e,f,g,strcat(h,'±',i)};
 xlswrite(strcat(datestr(now,30),'.xls'),[header;values]);
 msgbox('保存成功','提示','warn');
-123
-888
