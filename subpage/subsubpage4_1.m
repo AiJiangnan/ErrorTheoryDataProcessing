@@ -12,3 +12,32 @@ hf = figure('Name','等精度测量线性参数最小二乘法处理',...
 
 % 更改界面左上角图标
 icon;
+
+% 静态文本框
+t = 1:8;
+for i = 1:length(t)
+    t(i) = uicontrol(hf);
+end
+t_string = {'A:','L:','B:','C:','D'};
+t_position = [
+    20,420,50,25
+    20,370,50,25
+    20,340,50,25
+    20,310,50,25
+    360,370,50,25
+    360,340,50,25
+    360,310,50,25
+    40,220,50,25
+];
+
+for i = 1:length(t)
+    set(t(i),...
+        'Style','text',...
+        'String',t_string(i),...
+        'FontName','微软雅黑',...
+        'HorizontalAlignment','left',...
+        'FontSize',10,...
+        'Units','pixels',...
+        'Position',t_position(i,:),...
+        'BackgroundColor','White');
+end
