@@ -12,3 +12,5 @@ D = inv(C)
 EX = D*B*L
 V = L-A*EX
 V'*V
+
+888
