@@ -92,6 +92,10 @@ obj = findobj(gcf);
 A = str2num(get(obj(10),'String'));
 L = str2num(get(obj(9),'String'));
 P = str2num(get(obj(8),'String'));
+if isempty(A)||isempty(L)||isempty(P)
+	warndlg('缺少输入参数！');
+	return;
+end
 [C,D,EX] = data_process4(A,L,P);
 set(obj(7),'String',num2str(C));
 set(obj(6),'String',num2str(D));
