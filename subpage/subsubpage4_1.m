@@ -96,6 +96,10 @@ function run1(~,~)
 obj = findobj(gcf);
 A = str2num(get(obj(12),'String'));
 L = str2num(get(obj(11),'String'));
+if isempty(A)||isempty(L)
+	warndlg('缺少输入参数！');
+	return;
+end
 [D,EX,V,V_,s,d_ux] = data_process3(A,L);
 set(obj(10),'String',num2str(D));
 set(obj(9),'String',num2str(EX));
