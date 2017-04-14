@@ -3,15 +3,18 @@ clear
 clc
 
 %% 创建主界面
+s = get(0,'ScreenSize');% 获取计算机屏幕分辨率
+x = s(3)*0.15;
+y = s(4)*0.26;
 hf = figure('Name','回归分析',...
     'NumberTitle','off',...
-    'Position',[200,200,710,450],...
+    'Position',[x,y,710,450],...
     'MenuBar','none',...
     'Color','White',...
     'Resize','off');
 
 % 更改界面左上角图标
-% icon;
+icon;
 
 % 静态文本框
 t = 1:5;
@@ -63,9 +66,13 @@ uicontrol(hf,...
     'BackgroundColor','White');
 
 % 按钮
-b = [uicontrol(hf,'CallBack',@run1),uicontrol(hf),uicontrol(hf,'CallBack','page_exit')];
-b_string = {'计算','保存','返回'};
+b = [uicontrol(hf,'CallBack',@imp),...
+     uicontrol(hf,'CallBack',@run1),...
+     uicontrol(hf),...
+     uicontrol(hf,'CallBack','page_exit')];
+b_string = {'导入','计算','保存','返回'};
 b_position = [
+    250,360,80,25
     430,10,80,25
     520,10,80,25
     610,10,80,25

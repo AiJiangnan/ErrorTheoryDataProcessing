@@ -3,9 +3,12 @@ clear
 clc
 
 %% 创建主界面
+s = get(0,'ScreenSize');% 获取计算机屏幕分辨率
+x = s(3)*0.15;
+y = s(4)*0.26;
 hf = figure('Name','等精度测量数据误差分析',...
     'NumberTitle','off',...
-    'Position',[200,200,710,450],...
+    'Position',[x,y,710,450],...
     'MenuBar','none',...
     'Color','White',...
     'Resize','off');
@@ -14,48 +17,48 @@ hf = figure('Name','等精度测量数据误差分析',...
 icon;
 
 %% 界面控件
-%设置文字项属性(11)
-t = [uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf)];
-ui_string = {'数据：','置信系数：','平均值：','标准差：','数据：','平均值：','标准差：','算术平均值标准差：','结果：','±','残余误差分布图'};
-ui_position = [20,405,80,25%L1
-                      20,350,80,25%L2
-					  20,320,80,25%L2
-                      20,290,80,25%L3
-					  380,395,80,25%R1
-                      380,340,80,25%R2
-					  380,310,80,25%R3
-                      20,260,130,25%L4
-                      20,10,130,25%B1
-                      205,10,10,25%B2
-                      550,250,150,20];%R4
+%设置文字项属性
+t = 1:11;
+t_string = {'数据：','置信系数：','平均值：','标准差：','数据：','平均值：','标准差：','算术平均值标准差：','结果：','±','残余误差分布图'};
+t_position = [20,405,80,25
+               20,350,80,25
+			   20,320,80,25
+               20,290,80,25
+			   380,395,80,25
+               380,340,80,25
+			   380,310,80,25
+               20,260,130,25
+               20,10,130,25
+               205,10,10,25
+               550,250,150,20];
 
 for i = 1:length(t)
-    set(t(i),...
+    t(i) = uicontrol(hf,...
         'Style','text',...
-        'String',ui_string(i),...
+        'String',t_string(i),...
         'FontName','微软雅黑',...
         'HorizontalAlignment','left',...
         'FontSize',10,...
         'Units','pixels',...
-        'Position',ui_position(i,:),...
+        'Position',t_position(i,:),...
         'BackgroundColor','White');
 end
 
-% 输入数据文本框(10)
-e = [uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf),uicontrol(hf)];
-e_position = [100,380,240,50%L1
-                     100,350,240,25%L2
-					 100,320,240,25%L2
-                     100,290,240,25%L3
-                     450,370,240,50%R1
-                     450,340,240,25%R2
-                     450,310,240,25%R3
-                     160,260,180,25%L4
-                     100,10,100,25%B1
-                     220,10,100,25];%B2
+% 输入数据文本框
+e = 1:10;
+e_position = [100,380,240,50
+              100,350,240,25
+			  100,320,240,25
+              100,290,240,25
+              450,370,240,50
+              450,340,240,25
+              450,310,240,25
+              160,260,180,25
+              100,10,100,25
+              220,10,100,25];
 
 for i = 1:length(e)
-    set(e(i),...
+    e(i) = uicontrol(hf,...
         'Style','edit',...
         'FontSize',10,...
         'Units','pixels',...
@@ -79,7 +82,10 @@ uipanel(...
     'BackgroundColor','White');
 
 % 按钮(4)
-b = [uicontrol(hf,'CallBack',@imp),uicontrol(hf,'CallBack',@run1),uicontrol(hf,'CallBack',@outp),uicontrol(hf,'CallBack','page_exit')];
+b = [uicontrol(hf,'CallBack',@imp),...
+     uicontrol(hf,'CallBack',@run1),...
+     uicontrol(hf,'CallBack',@outp),...
+     uicontrol(hf,'CallBack','page_exit')];
 b_string = {'导入','计算','保存','返回'};
 b_position = [20,380,50,25
                      430,10,80,25
@@ -106,9 +112,8 @@ uicontrol(hf,...
     'FontSize',10);
 
 axes('Units','pixels',...
-        'Position',[30,60,650,190],...
-        'Box','on',...
-        'Tag','axes');
+     'Position',[30,60,650,190],...
+     'Box','on');
 
 function data_cho(~,~)
 global data_cell;
