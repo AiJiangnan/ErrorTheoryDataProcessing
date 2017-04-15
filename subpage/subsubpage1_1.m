@@ -1,6 +1,7 @@
 function subsubpage1_1
 clear
 clc
+global obj;
 
 %% 创建主界面
 s = get(0,'ScreenSize');% 获取计算机屏幕分辨率
@@ -88,9 +89,9 @@ b = [uicontrol(hf,'CallBack',@imp),...
      uicontrol(hf,'CallBack','page_exit')];
 b_string = {'导入','计算','保存','返回'};
 b_position = [20,380,50,25
-                     430,10,80,25
-                     520,10,80,25
-                     610,10,80,25];
+              430,10,80,25
+              520,10,80,25
+              610,10,80,25];
                  
 for i = 1:length(b)
     set(b(i),...
@@ -108,44 +109,39 @@ uicontrol(hf,...
     'String','数据',...
 	'Value',1,...
 	'CallBack',@data_cho,...
-	'UserData',1,...
     'FontSize',10);
 
 axes('Units','pixels',...
      'Position',[30,60,650,190],...
      'Box','on');
+     
+obj = findobj(gcf);
 
 function data_cho(~,~)
 global data_cell;
-obj = findobj(gcf);
+global obj;
 val = get(obj(3),'Value');
 set(obj(18),'String',data_cell{val});
 
 function run1(~,~)
-obj = findobj(gcf);
+global obj;
 s1 = str2num(get(obj(18),'String'));
 s2 = str2num(get(obj(17),'String'));
 if isempty(s1)||isempty(s2)
 	warndlg('缺少输入参数！');
 	return;
 end
-
 [data1,v1,a,a1,s,s1,s1_x,x] = data_process1(s1,s2);
-
+result = {x(2),x(1),s1_x,s1,a1,data1,s,a};
 axes(obj(2));
 plot(v1,'-o');
-
-set(obj(16),'String',a);
-set(obj(15),'String',s);
-set(obj(14),'String',data1);
-set(obj(13),'String',a1);
-set(obj(12),'String',s1);
-set(obj(11),'String',s1_x);
-set(obj(10),'String',x(1));
-set(obj(9),'String',x(2));
+for i = 9:16
+    set(obj(i),'String',result{i-8});
+end
 
 function imp(~,~)
 global data_cell;
+global obj;
 [FileName,PathName,FilterIndex] = uigetfile(...
     {'*.txt','Text Data Files(*.txt)';...
      '*.xls','Excel 工作薄(*.xls)'});
@@ -165,28 +161,21 @@ for i = 1:s(1)
 	data_cell{i} = a;
 end
 tip = '数据1';
-tip_num = 1;
 for i=2:(s(1))
 	tip = strcat(tip,'|数据',num2str(i));
-	tip_num = [tip_num,i];
 end
-obj = findobj(gcf);
 set(obj(3),'String',tip);
-set(obj(3),'UserData',tip_num);
-set(obj(18),'String',data(1,:));
+set(obj(18),'String',data_cell{1});
+msgbox('导入成功','提示','warn');
 
 function outp(~,~)
-obj = findobj(gcf);
+global obj;
 header = {'数据','置信系数','平均值','标准差','剔除粗大误差后平均值','剔除粗大误差后标准差','算术平均值标准差','结果'};
+n = [17:-1:15 13:-1:9];
+for i = 1:length(n)
+    str{i} = num2str(get(obj(n(i)),'String'));
+end
 a = num2str(get(obj(3),'Value'));
-b = num2str(get(obj(17),'String'));
-c = num2str(get(obj(16),'String'));
-d = num2str(get(obj(15),'String'));
-e = num2str(get(obj(13),'String'));
-f = num2str(get(obj(12),'String'));
-g = num2str(get(obj(11),'String'));
-h = num2str(get(obj(10),'String'));
-i = num2str(get(obj(9),'String'));
-values = {strcat('数据',a),b,c,d,e,f,g,strcat(h,'±',i)};
+values = {strcat('数据',a),str{1:6},strcat(str{7},'±',str{8})};
 xlswrite(strcat(datestr(now,30),'.xls'),[header;values]);
 msgbox('保存成功','提示','warn');
