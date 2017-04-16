@@ -1,4 +1,4 @@
 %%返回上一级菜单
 close(gcf);
-clear
+clear all
 clc

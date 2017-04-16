@@ -1,6 +1,7 @@
 function subsubpage5
-clear
+clear all;
 clc
+global obj;
 
 %% 创建主界面
 s = get(0,'ScreenSize');% 获取计算机屏幕分辨率
@@ -68,7 +69,7 @@ uicontrol(hf,...
 % 按钮
 b = [uicontrol(hf,'CallBack',@imp),...
      uicontrol(hf,'CallBack',@run1),...
-     uicontrol(hf),...
+     uicontrol(hf,'CallBack',@outp),...
      uicontrol(hf,'CallBack','page_exit')];
 b_string = {'导入','计算','保存','返回'};
 b_position = [
@@ -96,11 +97,35 @@ axes('Units','pixels',...
     'Position',[370,60,300,260],...
     'Box','on');
 
-function run1(~,~)
 obj = findobj(gcf);
-x = str2num(get(obj(9),'String'));
-y = str2num(get(obj(8),'String'));
-n = get(obj(7),'Value');
+
+function imp(~,~)
+global obj;
+[FileName,PathName,FilterIndex] = uigetfile(...
+    {'*.txt','Text Data Files(*.txt)';...
+     '*.xls','Excel 工作薄(*.xls)'});
+if FileName==0
+    return;
+end
+if FilterIndex==1
+	data = load(strcat(PathName,FileName));
+else
+	data = xlsread(strcat(PathName,FileName));
+end
+set(obj(10),'String',data(1,:));
+set(obj(9),'String',data(2,:));
+msgbox('导入成功','提示','warn');
+
+function run1(~,~)
+global obj;
+x = str2num(get(obj(10),'String'));
+y = str2num(get(obj(9),'String'));
+l = size(x);
+if l(1)>1
+    x = x';
+    y = y';
+end
+n = get(obj(8),'Value');
 if isempty(x)||isempty(y)
 	warndlg('缺少输入参数！');
 	return;
@@ -113,6 +138,17 @@ end
 [b,bint,r,rint,stats]=regress(y',I);
 axes(obj(3));
 rcoplot(r,rint);
+title('');
+xlabel('');
+ylabel('');
 Y = polyval(b(end:-1:1),x);
 axes(obj(2));
 plot(x,y,'k+',x,Y,'r');
+
+function outp(~,~)
+global obj;
+f1 = getframe(obj(3));
+f2 = getframe(obj(2));
+imwrite(f1.cdata,'残差分析结果.jpg','jpg')
+imwrite(f2.cdata,'拟合结果.jpg','jpg')
+msgbox('保存图像成功','提示','warn');

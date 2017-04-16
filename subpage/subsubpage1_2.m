@@ -1,5 +1,5 @@
 function subsubpage1_2
-clear
+clear all;
 clc
 global obj;
 
@@ -134,8 +134,9 @@ if isempty(s1)||isempty(s2)
 	warndlg('缺少输入参数！');
 	return;
 end
-[data1,v2,a1,a2,s1,s2,s2_x,p,x_,s_x_,x] = data_process2(data_cell,s2);
 val = get(obj(3),'Value');
+set(obj(21),'String',data_cell{val});
+[data1,v2,a1,a2,s1,s2,s2_x,p,x_,s_x_,x] = data_process2(data_cell,s2);
 axes(obj(2));
 plot(v2{val},'-o');
 result = {x(2),x(1),s_x_,x_,p(val),s2_x(val),s2(val),a2(val),data1{val},s1(val),a1(val)};

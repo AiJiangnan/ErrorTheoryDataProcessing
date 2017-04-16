@@ -1,5 +1,5 @@
 function subsubpage2
-clear
+clear all;
 clc
 
 %% 创建主界面

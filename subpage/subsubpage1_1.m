@@ -1,5 +1,5 @@
 function subsubpage1_1
-clear
+clear all;
 clc
 global obj;
 

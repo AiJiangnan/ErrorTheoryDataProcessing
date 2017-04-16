@@ -1,6 +1,7 @@
 function subsubpage4_1
-clear
+clear all;
 clc
+global obj;
 
 %% 创建主界面
 s = get(0,'ScreenSize');% 获取计算机屏幕分辨率
@@ -89,14 +90,11 @@ for i = 1:length(b)
         'Units','pixels',...
         'Position',b_position(i,:));
 end
-% 测试
-% obj = findobj(gcf);
-% for i = 5:12
-%     set(obj(i),'String',i);
-% end
+
+obj = findobj(gcf);
 
 function run1(~,~)
-obj = findobj(gcf);
+global obj;
 A = str2num(get(obj(12),'String'));
 L = str2num(get(obj(11),'String'));
 if isempty(A)||isempty(L)
@@ -104,9 +102,7 @@ if isempty(A)||isempty(L)
 	return;
 end
 [D,EX,V,V_,s,d_ux] = data_process3(A,L);
-set(obj(10),'String',num2str(D));
-set(obj(9),'String',num2str(EX));
-set(obj(8),'String',num2str(V));
-set(obj(7),'String',num2str(V_));
-set(obj(6),'String',num2str(s));
-set(obj(5),'String',num2str(d_ux));
+result = {d_ux,s,V_,V,EX,D};
+for i=5:10
+    set(obj(i),'String',num2str(result{i-4}));
+end

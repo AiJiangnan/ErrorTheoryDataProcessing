@@ -1,6 +1,7 @@
 function subsubpage3
-clear
+clear all
 clc
+global obj;
 
 %% 创建主界面
 s = get(0,'ScreenSize');% 获取计算机屏幕分辨率
@@ -27,17 +28,14 @@ uipanel(...
 
 % 不确定度
 t = 1:18;
-for i = 1:length(t)
-    t(i) = uicontrol(hf);
-end
-t_string = {'数据：','u1:','u2:','u3:','v1:','v2:','v3:',...
+t_string = {'数据：','u1(^-6):','u2(^-6):','u3(^-6):','v1:','v2:','v3:',...
     'V:','u_c:','v:','合成标准不确定度：','展伸不确定度：',...
     'V:','±','P:','v:','置信概率：','包含因子：'};
 t_position = [
     20,420,50,25
-    20,370,50,25
-    20,340,50,25
-    20,310,50,25
+    20,370,60,25
+    20,340,60,25
+    20,310,60,25
     360,370,50,25
     360,340,50,25
     360,310,50,25
@@ -55,7 +53,7 @@ t_position = [
 ];
 
 for i = 1:length(t)
-    set(t(i),...
+    t(i) = uicontrol(hf,...
         'Style','text',...
         'String',t_string(i),...
         'FontName','微软雅黑',...
@@ -68,9 +66,6 @@ end
 
 % 不确定度文本框
 e = 1:16;
-for i = 1:length(e)
-    e(i) = uicontrol(hf);
-end
 e_position = [
     80,400,320,45
     500,423,160,22
@@ -89,9 +84,8 @@ e_position = [
     370,90,110,25
     540,90,110,25
 ];
-
 for i = 1:length(e)
-    set(e(i),...
+    e(i) = uicontrol(hf,...
         'Style','edit',...
         'FontName','微软雅黑',...
         'HorizontalAlignment','left',...
@@ -99,7 +93,6 @@ for i = 1:length(e)
         'Units','pixels',...
         'Position',e_position(i,:),...
         'BackgroundColor','White');
-    % set(e(i),'String',i);
 end
 for i = 10:length(e)
     set(e(i),'Enable','inactive');
@@ -136,14 +129,17 @@ uicontrol(hf,...
 	'UserData',1,...
     'FontSize',10);
 
+obj = findobj(gcf);
+
 function data_cho(~,~)
 global data_cell;
-obj = findobj(gcf);
+global obj;
 val = get(obj(2),'Value');
 set(obj(22),'String',data_cell{val});
 
 function imp(~,~)
 global data_cell;
+global obj;
 [FileName,PathName,FilterIndex] = uigetfile(...
     {'*.txt','Text Data Files(*.txt)';...
     '*.xls','Excel 工作薄(*.xls)'});
@@ -163,19 +159,15 @@ for i = 1:s(1)
 	data_cell{i} = a;
 end
 tip = '第1组数据';
-tip_num = 1;
 for i=2:(s(1))
 	tip = strcat(tip,'|第',num2str(i),'组数据');
-	tip_num = [tip_num,i];
 end
-obj = findobj(gcf);
 set(obj(2),'String',tip);
-set(obj(2),'UserData',tip_num);
-set(obj(22),'String',data(1,:));
+set(obj(22),'String',data_cell{1});
 msgbox('导入成功','提示','warn');
 
 function run1(~,~)
-obj = findobj(gcf);
+global obj;
 for i = 14:22
     s = str2num(get(obj(i),'String'));
     if isempty(s)
@@ -183,41 +175,26 @@ for i = 14:22
 	    return;
     end
 end
-
-x = str2num(get(obj(22),'String'));
-P = str2num(get(obj(21),'String'));
-k = str2num(get(obj(20),'String'));
-u1 = str2num(get(obj(19),'String'));
-u2 = str2num(get(obj(18),'String'));
-u3 = str2num(get(obj(17),'String'));
-v1 = str2num(get(obj(16),'String'));
-v2 = str2num(get(obj(15),'String'));
-v3 = str2num(get(obj(14),'String'));
-u = [u1 u2 u3];
-v = [v1 v2 v3];
-
-[V_,u_c,v_,U,P_] = uncertainty(x,u,v,P,k);
-
-set(obj(13),'String',V_);
-set(obj(12),'String',u_c/1000000);
-set(obj(11),'String',v_);
-set(obj(10),'String',V_);
-set(obj(9),'String',U/1000000);
-set(obj(8),'String',P_);
-set(obj(7),'String',v_);
+V = str2num(get(obj(22),'String'));
+n1 = 21:-1:14;
+for i=1:length(n1);
+    x(i) = str2num(get(obj(n1(i)),'String'));
+end
+[V_,u_c,v_,U,P_] = uncertainty(V,x(3:5),x(6:8),x(1),x(2));
+result = [v_,P_,U/1000000,V_,v_,u_c/1000000,V_];
+for i=7:13
+    set(obj(i),'String',result(i-6));
+end
 
 function outp(~,~)
-% obj = findobj(gcf);
-% header = {'数据','置信系数','平均值','标准差','剔除粗大误差后平均值','剔除粗大误差后标准差','算术平均值标准差','结果'};
-% a = num2str(get(obj(3),'Value'));
-% b = num2str(get(obj(17),'String'));
-% c = num2str(get(obj(16),'String'));
-% d = num2str(get(obj(15),'String'));
-% e = num2str(get(obj(13),'String'));
-% f = num2str(get(obj(12),'String'));
-% g = num2str(get(obj(11),'String'));
-% h = num2str(get(obj(10),'String'));
-% i = num2str(get(obj(9),'String'));
-% values = {strcat('数据',a),b,c,d,e,f,g,strcat(h,'±',i)};
+global obj;
+header = {'数据：','u1(^-6)','u2(^-6)','u3(^-6)','v1','v2','v3',...
+        'V','u_c','v','V','P','v','置信概率','包含因子'};
+n = [19:-1:7 21:-1:20];
+for i = 1:length(n)
+    str{i} = num2str(get(obj(n(i)),'String'));
+end
+a = num2str(get(obj(2),'Value'));
+values = {strcat('数据',a),str{1:9},strcat(str{10},'±',str{11}),str{12:15}};
 xlswrite(strcat(datestr(now,30),'.xls'),[header;values]);
 msgbox('保存成功','提示','warn');
