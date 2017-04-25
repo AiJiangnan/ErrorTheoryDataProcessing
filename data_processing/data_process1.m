@@ -10,7 +10,7 @@ function [data1,v1,a,a1,s,s1,s1_x,x] = data_process1(data,t_a)
 
 a = mean(data);
 s = std(data);
-data1 = data;%以后加入剔除粗大误差函数
+data1 = BlodBig(data);
 
 a1 = mean(data1);
 s1 = std(data1);

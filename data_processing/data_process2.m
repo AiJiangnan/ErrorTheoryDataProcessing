@@ -12,7 +12,7 @@ s = size(data);
 for i = 1:s(1)
     a1(i) = mean(data{i});
     s1(i) = std(data{i});
-    data1{i} = data{i};% ÌÞ³ý´Ö´óÎó²îº¯Êý£¬»¹Î´Ð´
+    data1{i} = BlodBig(data{i});
 end
 
 for i = 1:s(1)
