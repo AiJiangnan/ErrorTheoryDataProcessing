@@ -73,12 +73,11 @@ set(e(6),'Max',1);
 set(e(7),'Max',1);
 
 % 按钮
-b = [uicontrol(hf,'CallBack',@run1),uicontrol(hf),uicontrol(hf,'CallBack','page_exit')];
-b_string = {'计算','保存','返回'};
+b = [uicontrol(hf,'CallBack',@run1),uicontrol(hf,'CallBack','page_exit')];
+b_string = {'计算','返回'};
 b_position = [
     430,10,80,25
     520,10,80,25
-    610,10,80,25
 ];
 
 for i = 1:length(b)
@@ -95,8 +94,8 @@ obj = findobj(gcf);
 
 function run1(~,~)
 global obj;
-A = str2num(get(obj(12),'String'));
-L = str2num(get(obj(11),'String'));
+A = str2num(get(obj(11),'String'));
+L = str2num(get(obj(10),'String'));
 if isempty(A)||isempty(L)
 	warndlg('缺少输入参数！');
 	return;
