@@ -117,13 +117,13 @@ axes('Units','pixels',...
      
 obj = findobj(gcf);
 
-function data_cho(~,~)
+function data_cho(a,b)
 global data_cell;
 global obj;
 val = get(obj(3),'Value');
 set(obj(18),'String',data_cell{val});
 
-function run1(~,~)
+function run1(a,b)
 global obj;
 s1 = str2num(get(obj(18),'String'));
 s2 = str2num(get(obj(17),'String'));
@@ -139,7 +139,7 @@ for i = 9:16
     set(obj(i),'String',result{i-8});
 end
 
-function imp(~,~)
+function imp(a,b)
 global data_cell;
 global obj;
 [FileName,PathName,FilterIndex] = uigetfile(...
@@ -168,7 +168,7 @@ set(obj(3),'String',tip);
 set(obj(18),'String',data_cell{1});
 msgbox('导入成功','提示','warn');
 
-function outp(~,~)
+function outp(a,b)
 global obj;
 header = {'数据','置信系数','平均值','标准差','剔除粗大误差后平均值','剔除粗大误差后标准差','算术平均值标准差','结果'};
 n = [17:-1:15 13:-1:9];

@@ -99,7 +99,7 @@ axes('Units','pixels',...
 
 obj = findobj(gcf);
 
-function imp(~,~)
+function imp(a,b)
 global obj;
 [FileName,PathName,FilterIndex] = uigetfile(...
     {'*.txt','Text Data Files(*.txt)';...
@@ -116,7 +116,7 @@ set(obj(10),'String',data(1,:));
 set(obj(9),'String',data(2,:));
 msgbox('导入成功','提示','warn');
 
-function run1(~,~)
+function run1(a,b)
 global obj;
 x = str2num(get(obj(10),'String'));
 y = str2num(get(obj(9),'String'));
@@ -145,7 +145,7 @@ Y = polyval(b(end:-1:1),x);
 axes(obj(2));
 plot(x,y,'k+',x,Y,'r');
 
-function outp(~,~)
+function outp(a,b)
 global obj;
 f1 = getframe(obj(3));
 f2 = getframe(obj(2));

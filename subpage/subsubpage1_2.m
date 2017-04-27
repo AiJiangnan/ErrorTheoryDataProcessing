@@ -125,7 +125,7 @@ axes('Units','pixels',...
 
 obj = findobj(gcf);
 
-function run1(~,~)
+function run1(a,b)
 global data_cell;
 global obj;
 s1 = str2num(get(obj(21),'String'));
@@ -144,7 +144,7 @@ for i = 9:19
     set(obj(i),'String',result{i-8});
 end
 
-function imp(~,~)
+function imp(a,b)
 global data_cell;
 global obj;
 [FileName,PathName,FilterIndex] = uigetfile(...
@@ -173,7 +173,7 @@ set(obj(3),'String',tip);
 set(obj(21),'String',data_cell{1});
 msgbox('导入成功','提示','warn');
 
-function outp(~,~)
+function outp(a,b)
 global obj;
 header = {'数据','置信系数','平均值','标准差','剔除粗大误差后平均值','剔除粗大误差后标准差',...
           '算术平均值标准差','数据的权','加权算术平均值','加权算术平均值标准差','结果'};

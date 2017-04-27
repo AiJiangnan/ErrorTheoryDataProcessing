@@ -69,13 +69,13 @@ uicontrol(hf,...
     'ButtonDownFcn','subpage');
 
 % 显示学校名称PNG图片函数
-function school_logo(~,~)
-[I,~,alpha] = imread('image/school_logo.png');
+function school_logo(a,b)
+[I,c,alpha] = imread('image/school_logo.png');
 h = imshow(I);
 set(h,'AlphaData',alpha);
 
 %% 主界面退出对话框
-function hexit(~,~)
+function hexit(a,b)
 he = questdlg('你确定退出吗？','退出程序','是','否','否');
 if strcmp(he,'是')
     close;

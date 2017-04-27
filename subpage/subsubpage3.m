@@ -131,13 +131,13 @@ uicontrol(hf,...
 
 obj = findobj(gcf);
 
-function data_cho(~,~)
+function data_cho(a,b)
 global data_cell;
 global obj;
 val = get(obj(2),'Value');
 set(obj(22),'String',data_cell{val});
 
-function imp(~,~)
+function imp(a,b)
 global data_cell;
 global obj;
 [FileName,PathName,FilterIndex] = uigetfile(...
@@ -166,7 +166,7 @@ set(obj(2),'String',tip);
 set(obj(22),'String',data_cell{1});
 msgbox('导入成功','提示','warn');
 
-function run1(~,~)
+function run1(a,b)
 global obj;
 for i = 14:22
     s = str2num(get(obj(i),'String'));
@@ -186,7 +186,7 @@ for i=7:13
     set(obj(i),'String',result(i-6));
 end
 
-function outp(~,~)
+function outp(a,b)
 global obj;
 header = {'数据：','u1(^-6)','u2(^-6)','u3(^-6)','v1','v2','v3',...
         'V','u_c','v','V','P','v','置信概率','包含因子'};

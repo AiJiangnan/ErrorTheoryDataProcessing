@@ -41,12 +41,12 @@ axes('Units','pixels',...
     'Position',[300,70,400,400],...
     'CreateFcn',@plot2);
 
-function plot1(~,~)
+function plot1(a,b)
 [I,~,alpha] = imread('image/photo_1_1.png');
 h = imshow(I);
 set(h,'AlphaData',alpha);
 
-function plot2(~,~)
+function plot2(a,b)
 [I,~,alpha] = imread('image/photo_1_2.png');
 h = imshow(I);
 set(h,'AlphaData',alpha);

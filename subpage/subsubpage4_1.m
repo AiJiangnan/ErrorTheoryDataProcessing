@@ -92,7 +92,7 @@ end
 
 obj = findobj(gcf);
 
-function run1(~,~)
+function run1(a,b)
 global obj;
 A = str2num(get(obj(11),'String'));
 L = str2num(get(obj(10),'String'));
