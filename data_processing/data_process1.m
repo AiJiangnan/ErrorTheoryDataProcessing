@@ -7,7 +7,6 @@
 %
 
 function [data1,v1,a,a1,s,s1,s1_x,x] = data_process1(data,t_a)
-
 a = mean(data);
 s = std(data);
 data1 = BlodBig(data);
