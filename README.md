@@ -3,7 +3,7 @@
 本毕业设计使用软件Matlab开发，使用方法见Readme.txt。
 
 **下载源码步骤：**
-- 进入我的Github仓库，地址：[https://github.com/AiJiangnan/InstituteOfDisasterPreventionPaper](https://github.com/AiJiangnan/InstituteOfDisasterPreventionPaper)
+- 进入我的Github仓库，地址：[https://github.com/AiJiangnan/ErrorTheoryDataProcessing](https://github.com/AiJiangnan/ErrorTheoryDataProcessing)
 - 点击代码列表右上角 `Clone or download`
 - 点击 `Downliad ZIP` 即可下载源码压缩包
 
