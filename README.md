@@ -1,10 +1,28 @@
-# åŸºäºGUIçš„è¯¯å·®ç†è®ºä¸æ•°æ®å¤„ç†
+# »ùÓÚGUIµÄÎó²îÀíÂÛÓëÊı¾İ´¦Àí
 
-æœ¬æ¯•ä¸šè®¾è®¡ä½¿ç”¨è½¯ä»¶Matlabå¼€å‘ï¼Œä½¿ç”¨æ–¹æ³•è§Readme.txtã€‚
+**×÷Õß£º°¬½­ÄÏ**  
+**Ö¸µ¼ÀÏÊ¦£ºÒ¦Õñ¾²**
 
-**ä¸‹è½½æºç æ­¥éª¤ï¼š**
-- è¿›å…¥æˆ‘çš„Githubä»“åº“ï¼Œåœ°å€ï¼š[https://github.com/AiJiangnan/ErrorTheoryDataProcessing](https://github.com/AiJiangnan/ErrorTheoryDataProcessing)
-- ç‚¹å‡»ä»£ç åˆ—è¡¨å³ä¸Šè§’ `Clone or download`
-- ç‚¹å‡» `Downliad ZIP` å³å¯ä¸‹è½½æºç å‹ç¼©åŒ…
+±¾±ÏÒµÉè¼ÆÊ¹ÓÃÈí¼şMatlab¿ª·¢¡£
+
+## Ò»¡¢ÏÂÔØÔ´Âë
+
+1. Ê¹ÓÃ`git`¿ËÂ¡µ½±¾µØ
+    - ÔÚ`git`ÃüÁî´°¿ÚÊäÈë`git clone https://github.com/AiJiangnan/ErrorTheoryDataProcessing.git`
+2. Ö±½ÓÏÂÔØÔ´Âë
+    - ½øÈëÎÒµÄGithub²Ö¿â£¬µØÖ·£º[https://github.com/AiJiangnan/ErrorTheoryDataProcessing](https://github.com/AiJiangnan/ErrorTheoryDataProcessing)
+    - µã»÷´úÂëÁĞ±íÓÒÉÏ½Ç `Clone or download`
+    - µã»÷ `Downliad ZIP` ¼´¿ÉÏÂÔØÔ´ÂëÑ¹Ëõ°ü
 
 ![](http://note.youdao.com/yws/api/personal/file/D1FE88EDB18A4DD8BFD8D51AE9B8637C?method=download&shareKey=24a09a4f77a2d608fca39a50f8d8871e)
+
+## ¶ş¡¢Èí¼şÓÃ·¨
+1. ÔËĞĞMatlab²¢×ªµ½µ±Ç°Ä¿Â¼£»
+2. Ö±½ÓÔËĞĞindexÖ÷½çÃæÎÄ¼ş¡£
+3. ²âÊÔÊı¾İµ¼Èë
+    - µÈ¾«¶È²âÁ¿£º`data1_1.txt¡¢data1_1.xls`
+    - ²»µÈ¾«¶È²âÁ¿£º`data1_2.txt¡¢data1_2.xls`
+    - ²âÁ¿²»È·¶¨¶È£º`data3.txt¡¢data3.xls`
+    - ×îĞ¡¶ş³Ë·¨£º´Ó`data4.txt`¸´ÖÆÊı¾İ
+    - »Ø¹é·ÖÎö£º`data5.txt¡¢data5.xls`
+4. ±£´æµÄÊı¾İÎÄ¼şÒÔ£º£¨`ÈÕÆÚ_Ê±¼ä.txt` £©µÄ¸ñÊ½±£´æ
