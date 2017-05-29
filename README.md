@@ -1,28 +1,28 @@
-# »ùÓÚGUIµÄÎó²îÀíÂÛÓëÊı¾İ´¦Àí
+# åŸºäºGUIçš„è¯¯å·®ç†è®ºä¸æ•°æ®å¤„ç†
 
-**×÷Õß£º°¬½­ÄÏ**  
-**Ö¸µ¼ÀÏÊ¦£ºÒ¦Õñ¾²**
+**ä½œè€…ï¼šè‰¾æ±Ÿå—**  
+**æŒ‡å¯¼è€å¸ˆï¼šå§šæŒ¯é™**
 
-±¾±ÏÒµÉè¼ÆÊ¹ÓÃÈí¼şMatlab¿ª·¢¡£
+æœ¬æ¯•ä¸šè®¾è®¡ä½¿ç”¨è½¯ä»¶Matlabå¼€å‘ã€‚
 
-## Ò»¡¢ÏÂÔØÔ´Âë
+## ä¸€ã€ä¸‹è½½æºç 
 
-1. Ê¹ÓÃ`git`¿ËÂ¡µ½±¾µØ
-    - ÔÚ`git`ÃüÁî´°¿ÚÊäÈë`git clone https://github.com/AiJiangnan/ErrorTheoryDataProcessing.git`
-2. Ö±½ÓÏÂÔØÔ´Âë
-    - ½øÈëÎÒµÄGithub²Ö¿â£¬µØÖ·£º[https://github.com/AiJiangnan/ErrorTheoryDataProcessing](https://github.com/AiJiangnan/ErrorTheoryDataProcessing)
-    - µã»÷´úÂëÁĞ±íÓÒÉÏ½Ç `Clone or download`
-    - µã»÷ `Downliad ZIP` ¼´¿ÉÏÂÔØÔ´ÂëÑ¹Ëõ°ü
+1. ä½¿ç”¨`git`å…‹éš†åˆ°æœ¬åœ°
+    - åœ¨`git`å‘½ä»¤çª—å£è¾“å…¥`git clone https://github.com/AiJiangnan/ErrorTheoryDataProcessing.git`
+2. ç›´æ¥ä¸‹è½½æºç 
+    - è¿›å…¥æˆ‘çš„Githubä»“åº“ï¼Œåœ°å€ï¼š[https://github.com/AiJiangnan/ErrorTheoryDataProcessing](https://github.com/AiJiangnan/ErrorTheoryDataProcessing)
+    - ç‚¹å‡»ä»£ç åˆ—è¡¨å³ä¸Šè§’ `Clone or download`
+    - ç‚¹å‡» `Downliad ZIP` å³å¯ä¸‹è½½æºç å‹ç¼©åŒ…
 
 ![](http://note.youdao.com/yws/api/personal/file/D1FE88EDB18A4DD8BFD8D51AE9B8637C?method=download&shareKey=24a09a4f77a2d608fca39a50f8d8871e)
 
-## ¶ş¡¢Èí¼şÓÃ·¨
-1. ÔËĞĞMatlab²¢×ªµ½µ±Ç°Ä¿Â¼£»
-2. Ö±½ÓÔËĞĞindexÖ÷½çÃæÎÄ¼ş¡£
-3. ²âÊÔÊı¾İµ¼Èë
-    - µÈ¾«¶È²âÁ¿£º`data1_1.txt¡¢data1_1.xls`
-    - ²»µÈ¾«¶È²âÁ¿£º`data1_2.txt¡¢data1_2.xls`
-    - ²âÁ¿²»È·¶¨¶È£º`data3.txt¡¢data3.xls`
-    - ×îĞ¡¶ş³Ë·¨£º´Ó`data4.txt`¸´ÖÆÊı¾İ
-    - »Ø¹é·ÖÎö£º`data5.txt¡¢data5.xls`
-4. ±£´æµÄÊı¾İÎÄ¼şÒÔ£º£¨`ÈÕÆÚ_Ê±¼ä.txt` £©µÄ¸ñÊ½±£´æ
+## äºŒã€è½¯ä»¶ç”¨æ³•
+1. è¿è¡ŒMatlabå¹¶è½¬åˆ°å½“å‰ç›®å½•ï¼›
+2. ç›´æ¥è¿è¡Œindexä¸»ç•Œé¢æ–‡ä»¶ã€‚
+3. æµ‹è¯•æ•°æ®å¯¼å…¥
+    - ç­‰ç²¾åº¦æµ‹é‡ï¼š`data1_1.txtã€data1_1.xls`
+    - ä¸ç­‰ç²¾åº¦æµ‹é‡ï¼š`data1_2.txtã€data1_2.xls`
+    - æµ‹é‡ä¸ç¡®å®šåº¦ï¼š`data3.txtã€data3.xls`
+    - æœ€å°äºŒä¹˜æ³•ï¼šä»`data4.txt`å¤åˆ¶æ•°æ®
+    - å›å½’åˆ†æï¼š`data5.txtã€data5.xls`
+4. ä¿å­˜çš„æ•°æ®æ–‡ä»¶ä»¥ï¼šï¼ˆ`æ—¥æœŸ_æ—¶é—´.txt` ï¼‰çš„æ ¼å¼ä¿å­˜
