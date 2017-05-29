@@ -1,7 +1,6 @@
 function subsubpage2
 clear all;
 clc
-global obj;
 
 %% 创建主界面
 s = get(0,'ScreenSize');% 获取计算机屏幕分辨率
@@ -40,6 +39,7 @@ end
 
 % 文本框
 e = 1:3;
+e_tag = {'a','Delta','result'};
 e_position = [
     70,320,610,125
     70,190,610,125
@@ -52,6 +52,7 @@ for i = 1:length(e)
         'FontSize',10,...
         'Units','pixels',...
         'Position',e_position(i,:),...
+        'Tag',e_tag{i},...
         'BackgroundColor','White',...
         'Min',1,'Max',3,...
         'HorizontalAlignment','left');
@@ -76,15 +77,16 @@ for i = 1:length(b)
         'Position',b_position(i,:));
 end
 
-obj = findobj(gcf);
+guidata(hf,guihandles);
 
-function run1(a,b)
-global obj;
-a = str2num(get(obj(6),'String'));
-delta = str2num(get(obj(5),'String'));
+% 计算函数
+function run1(cbo,handles)
+handles = guidata(cbo);
+a = str2num(get(handles.a,'String'));
+delta = str2num(get(handles.Delta,'String'));
 if isempty(a)||isempty(delta)
 	warndlg('缺少输入参数！');
 	return;
 end
 result = error_combination(a,delta);
-set(obj(4),'String',num2str(result));
+set(handles.result,'String',num2str(result));
