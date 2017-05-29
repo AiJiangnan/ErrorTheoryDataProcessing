@@ -155,8 +155,19 @@ plot(x,y,'k+',x,Y,'r');
 % 保存数据函数
 function outp(cbo,handles)
 handles = guidata(cbo);
-f1 = getframe(handles.v_axes);
-f2 = getframe(handles.r_axes);
-imwrite(f1.cdata,'残差分析结果.jpg','jpg')
-imwrite(f2.cdata,'拟合结果.jpg','jpg')
+h1 = get(handles.v_axes,'children');
+figure('visible','off');
+axes;
+box on;
+xlabel('$Case\ Number$','Interpreter','latex');
+ylabel('$Residuals$','Interpreter','latex');
+title('$Residual\ Case\ Order\ Plot$','Interpreter','latex');
+copyobj(h1,gca);
+print(gcf,'-zbuffer','-dpng','-r500','残差分析结果.png');
+h2 = get(handles.r_axes,'children');
+figure('visible','off');
+axes;
+title('$Regression\ Analysis$','Interpreter','latex');
+copyobj(h2,gca);
+print(gcf,'-zbuffer','-dpng','-r500','拟合结果.png');
 msgbox('保存图像成功','提示','warn');
