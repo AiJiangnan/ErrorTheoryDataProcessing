@@ -1,7 +1,6 @@
 function subsubpage1_1
 clear all;
 clc
-global obj;
 
 %% 创建主界面
 s = get(0,'ScreenSize');% 获取计算机屏幕分辨率
@@ -11,6 +10,7 @@ hf = figure('Name','等精度测量数据误差分析',...
     'NumberTitle','off',...
     'Position',[x,y,710,450],...
     'MenuBar','none',...
+    'Tag','figure',...
     'Color','White',...
     'Resize','off');
 
@@ -35,7 +35,7 @@ t_position = [20,405,80,25
 for i = 1:length(t)
     t(i) = uicontrol(hf,...
         'Style','text',...
-        'String',t_string(i),...
+        'String',t_string{i},...
         'FontName','微软雅黑',...
         'HorizontalAlignment','left',...
         'FontSize',10,...
@@ -46,6 +46,7 @@ end
 
 % 输入数据文本框
 e = 1:10;
+e_tag = {'data','coefficient','average','standard','data_','average_','standard_','average_standard','result_1','result_2'};
 e_position = [100,380,240,50
               100,350,240,25
 			  100,320,240,25
@@ -62,6 +63,7 @@ for i = 1:length(e)
         'Style','edit',...
         'FontSize',10,...
         'Units','pixels',...
+        'Tag',e_tag{i},...
         'Position',e_position(i,:),...
         'HorizontalAlignment','left',...
         'BackgroundColor','White');
@@ -81,7 +83,7 @@ uipanel(...
     'Position',[350,290,350,160],...
     'BackgroundColor','White');
 
-% 按钮(4)
+% 按钮
 b = [uicontrol(hf,'CallBack',@imp),...
      uicontrol(hf,'CallBack',@run1),...
      uicontrol(hf,'CallBack',@outp),...
@@ -102,45 +104,27 @@ for i = 1:length(b)
         'Position',b_position(i,:));
 end
 
+% 下拉列表
 uicontrol(hf,...
     'Style','popup',...
     'Position',[340,10,80,25],...
     'String','数据',...
 	'Value',1,...
+    'Tag','list',...
 	'CallBack',@data_cho,...
     'FontSize',10);
 
+% 坐标轴
 axes('Units','pixels',...
      'Position',[30,60,650,190],...
+     'Tag','axes',...
      'Box','on');
-     
-obj = findobj(gcf);
 
-function data_cho(a,b)
-global data_cell;
-global obj;
-val = get(obj(3),'Value');
-set(obj(18),'String',data_cell{val});
+guidata(hf,guihandles);
 
-function run1(a,b)
-global obj;
-s1 = str2num(get(obj(18),'String'));
-s2 = str2num(get(obj(17),'String'));
-if isempty(s1)||isempty(s2)
-	warndlg('缺少输入参数！');
-	return;
-end
-[data1,v1,a,a1,s,s1,s1_x,x] = data_process1(s1,s2);
-result = {x(2),x(1),s1_x,s1,a1,data1,s,a};
-axes(obj(2));
-plot(v1,'-o');
-for i = 9:16
-    set(obj(i),'String',result{i-8});
-end
-
-function imp(a,b)
-global data_cell;
-global obj;
+% 导入数据函数
+function imp(cbo,handles)
+handles = guidata(cbo);
 [FileName,PathName,FilterIndex] = uigetfile(...
     {'*.txt','Text Data Files(*.txt)';...
      '*.xls','Excel 工作薄(*.xls)'});
@@ -163,18 +147,59 @@ tip = '数据1';
 for i=2:(s(1))
 	tip = strcat(tip,'|数据',num2str(i));
 end
-set(obj(3),'String',tip);
-set(obj(18),'String',data_cell{1});
+set(handles.list,'String',tip);
+set(handles.data,'String',data_cell{1});
 msgbox('导入成功','提示','warn');
 
-function outp(a,b)
-global obj;
-header = {'数据','置信系数','平均值','标准差','剔除粗大误差后平均值','剔除粗大误差后标准差','算术平均值标准差','结果'};
-n = [17:-1:15 13:-1:9];
-for i = 1:length(n)
-    str{i} = num2str(get(obj(n(i)),'String'));
+mydata = guihandles(handles.figure);
+mydata.data_cell = data_cell;
+guidata(handles.figure,mydata);
+
+% 数据选择函数
+function data_cho(cbo,handles)
+handles = guidata(cbo);
+if isfield(handles,'data_cell')==0
+    warndlg('没有数据！');
+else
+    val = get(handles.list,'Value');
+    set(handles.data,'String',handles.data_cell{val});
 end
-a = num2str(get(obj(3),'Value'));
-values = {strcat('数据',a),str{1:6},strcat(str{7},'±',str{8})};
-xlswrite(strcat(datestr(now,30),'.xls'),[header;values]);
+
+% 计算函数
+function run1(cbo,handles)
+handles = guidata(cbo);
+s1 = str2num(get(handles.data,'String'));
+s2 = str2num(get(handles.coefficient,'String'));
+if isempty(s1)||isempty(s2)
+	warndlg('缺少输入参数！');
+	return;
+end
+[data1,v1,a,a1,s,s1,s1_x,x] = data_process1(s1,s2);
+axes(handles.axes);
+plot(v1,'-o');
+set(handles.data_,'String',data1);
+set(handles.average,'String',a);
+set(handles.average_,'String',a1);
+set(handles.standard,'String',s);
+set(handles.standard_,'String',s1);
+set(handles.average_standard,'String',s1_x);
+set(handles.result_1,'String',x(1));
+set(handles.result_2,'String',x(2));
+
+% 保存数据函数
+function outp(cbo,handles)
+handles = guidata(cbo);
+data        = strcat('数据',num2str(get(handles.list,'Value')));
+coefficient = str2num(get(handles.coefficient,'String'));
+average     = str2num(get(handles.average,'String'));
+standard    = str2num(get(handles.standard,'String'));
+average_    = str2num(get(handles.average_,'String'));
+standard_   = str2num(get(handles.standard_,'String'));
+average_standard   = str2num(get(handles.average_standard,'String'));
+result1     = str2num(get(handles.result_1,'String'));
+result2     = str2num(get(handles.result_2,'String'));
+fid = fopen(strcat(datestr(now,'yyyy-mm-dd_HH-MM-ss'),'.txt'),'w');
+fprintf(fid,'%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\r\n','数据','置信系数','平均值','标准差','剔除粗大误差后平均值','剔除粗大误差后标准差','算术平均值标准差','结果');
+fprintf(fid,'%s\t%.2f\t%.4f\t%.4f\t%.4f\t%.4f\t%.4f\t%.3f±%.3f',data,coefficient,average,standard,average_,standard_,average_standard,result1,result2);
+fclose(fid);
 msgbox('保存成功','提示','warn');

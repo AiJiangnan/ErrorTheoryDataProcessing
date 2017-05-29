@@ -1,7 +1,6 @@
 function subsubpage1_2
 clear all;
 clc
-global obj;
 
 %% 创建主界面
 s = get(0,'ScreenSize');% 获取计算机屏幕分辨率
@@ -12,12 +11,12 @@ hf = figure('Name','不等精度测量数据误差分析',...
     'Position',[x,y,710,450],...
     'MenuBar','none',...
     'Color','White',...
+    'Tag','figure',...
     'Resize','off');
 
 % 更改界面左上角图标
 icon;
 
-%% 界面控件
 % 设置文字项属性
 t = 1:14;
 t_string = {'数据：','置信系数：','平均值：','标准差：','数据：','平均值：','标准差：','算术平均值标准差：',...
@@ -51,6 +50,7 @@ end
 
 % 输入数据文本框
 e = 1:13;
+e_tag = {'data','coefficient','average','standard','data_','average_','standard_','average_standard','weight','waverage','waverage_standard','result_1','result_2'};
 e_position = [100,380,240,50
               100,350,240,25
 			  100,320,240,25
@@ -70,6 +70,7 @@ for i = 1:length(e)
         'Style','edit',...
         'FontSize',10,...
         'Units','pixels',...
+        'Tag',e_tag{i},...
         'Position',e_position(i,:),...
         'HorizontalAlignment','left',...
         'BackgroundColor','White');
@@ -110,43 +111,28 @@ for i = 1:length(b)
         'Position',b_position(i,:));
 end
 
+% 下拉列表
 uicontrol(hf,...
     'Style','popup',...
     'Position',[340,10,80,25],...
     'String','数据',...
 	'Value',1,...
+    'Tag','list',...
 	'CallBack',@run1,...
 	'UserData',1,...
     'FontSize',10);
 
+% 坐标轴
 axes('Units','pixels',...
-        'Position',[30,60,650,160],...
-        'Box','on');
+    'Position',[30,60,650,160],...
+    'Tag','axes',...
+    'Box','on');
 
-obj = findobj(gcf);
+guidata(hf,guihandles);
 
-function run1(a,b)
-global data_cell;
-global obj;
-s1 = str2num(get(obj(21),'String'));
-s2 = str2num(get(obj(20),'String'));
-if isempty(s1)||isempty(s2)
-	warndlg('缺少输入参数！');
-	return;
-end
-val = get(obj(3),'Value');
-set(obj(21),'String',data_cell{val});
-[data1,v2,a1,a2,s1,s2,s2_x,p,x_,s_x_,x] = data_process2(data_cell,s2);
-axes(obj(2));
-plot(v2{val},'-o');
-result = {x(2),x(1),s_x_,x_,p(val),s2_x(val),s2(val),a2(val),data1{val},s1(val),a1(val)};
-for i = 9:19
-    set(obj(i),'String',result{i-8});
-end
-
-function imp(a,b)
-global data_cell;
-global obj;
+% 导入数据函数
+function imp(cbo,handles)
+handles = guidata(cbo);
 [FileName,PathName,FilterIndex] = uigetfile(...
     {'*.txt','Text Data Files(*.txt)';...
     '*.xls','Excel 工作薄(*.xls)'});
@@ -169,19 +155,58 @@ tip = '第1组数据';
 for i=2:(s(1))
 	tip = strcat(tip,'|第',num2str(i),'组数据');
 end
-set(obj(3),'String',tip);
-set(obj(21),'String',data_cell{1});
+set(handles.list,'String',tip);
+set(handles.data,'String',data_cell{1});
 msgbox('导入成功','提示','warn');
 
-function outp(a,b)
-global obj;
-header = {'数据','置信系数','平均值','标准差','剔除粗大误差后平均值','剔除粗大误差后标准差',...
-          '算术平均值标准差','数据的权','加权算术平均值','加权算术平均值标准差','结果'};
-a = num2str(get(obj(3),'Value'));
-n = [20:-1:18 16:-1:9];
-for i = 1:length(n)
-    str{i} = get(obj(n(i)),'String');
+mydata = guihandles(handles.figure);
+mydata.data_cell = data_cell;
+guidata(handles.figure,mydata);
+
+% 计算函数
+function run1(cbo,handles)
+handles = guidata(cbo);
+set(handles.coefficient,'String',2.58);
+s1 = str2num(get(handles.data,'String'));
+s2 = str2num(get(handles.coefficient,'String'));
+if isempty(s1)||isempty(s2)
+	warndlg('缺少输入参数！');
+	return;
 end
-values = {strcat('第',a,'组数据'),str{1:9},strcat(str{10},'±',str{11})};
-xlswrite(strcat(datestr(now,30),'.xls'),[header;values]);
+val = get(handles.list,'Value');
+set(handles.data,'String',handles.data_cell{val});
+[data1,v2,a1,a2,s1,s2,s2_x,p,x_,s_x_,x] = data_process2(handles.data_cell,s2);
+axes(handles.axes);
+plot(v2{val},'-o');
+set(handles.average,'String',a1(val));
+set(handles.standard,'String',s1(val));
+set(handles.data_,'String',data1(val));
+set(handles.average_,'String',a2(val));
+set(handles.standard_,'String',s2(val));
+set(handles.average_standard,'String',s2_x(val));
+set(handles.weight,'String',p(val));
+set(handles.waverage,'String',x_);
+set(handles.waverage_standard,'String',s_x_);
+set(handles.result_1,'String',x(1));
+set(handles.result_2,'String',x(2));
+
+% 保存数据函数
+function outp(cbo,handles)
+handles = guidata(cbo);
+data        = strcat('第',num2str(get(handles.list,'Value')),'组数据');
+coefficient = str2num(get(handles.coefficient,'String'));
+average     = str2num(get(handles.average,'String'));
+standard    = str2num(get(handles.standard,'String'));
+average_    = str2num(get(handles.average_,'String'));
+standard_   = str2num(get(handles.standard_,'String'));
+average_standard   = str2num(get(handles.average_standard,'String'));
+weight      = str2num(get(handles.weight,'String'));
+waverage    = str2num(get(handles.waverage,'String'));
+waverage_standard  = str2num(get(handles.waverage_standard,'String'));
+result1     = str2num(get(handles.result_1,'String'));
+result2     = str2num(get(handles.result_2,'String'));
+fid = fopen(strcat(datestr(now,'yyyy-mm-dd_HH-MM-ss'),'.txt'),'w');
+fprintf(fid,'%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\r\n','数据','置信系数','平均值','标准差','剔除粗大误差后平均值','剔除粗大误差后标准差','算术平均值标准差','数据的权','加权算术平均值','加权算术平均值标准差','结果');
+fprintf(fid,'%s\t%.2f\t%.4f\t%.4f\t%.4f\t%.4f\t%.4f\t%.4f\t%.4f\t%.4f\t%.3f±%.3f',data,coefficient,average,standard,average_,standard_,average_standard,weight,waverage,waverage_standard,result1,result2);
+fclose(fid);
 msgbox('保存成功','提示','warn');

@@ -24,6 +24,7 @@ icon;
 % 学校名称
 axes('Units','pixels',...
     'Position',[0,350,430,100],...
+    'Tag','logo',...
     'CreateFcn',@school_logo);
 
 % 校训
@@ -69,13 +70,13 @@ uicontrol(hf,...
     'ButtonDownFcn','subpage');
 
 % 显示学校名称PNG图片函数
-function school_logo(a,b)
+function school_logo(cbo,handles)
 [I,c,alpha] = imread('image/school_logo.png');
 h = imshow(I);
 set(h,'AlphaData',alpha);
 
 %% 主界面退出对话框
-function hexit(a,b)
+function hexit(cbo,handles)
 he = questdlg('你确定退出吗？','退出程序','是','否','否');
 if strcmp(he,'是')
     close;
