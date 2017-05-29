@@ -1,7 +1,6 @@
 function subsubpage3
 clear all
 clc
-global obj;
 
 %% 创建主界面
 s = get(0,'ScreenSize');% 获取计算机屏幕分辨率
@@ -11,6 +10,7 @@ hf = figure('Name','测量不确定度',...
     'NumberTitle','off',...
     'Position',[x,y,710,450],...
     'MenuBar','none',...
+    'Tag','figure',...
     'Color','White',...
     'Resize','off');
 
@@ -66,6 +66,7 @@ end
 
 % 不确定度文本框
 e = 1:16;
+e_tag = {'data','probability','divisor','u1','u2','u3','v1','v2','v3','V','u_c','v','result_1','result_2','P','v_'};
 e_position = [
     80,400,320,45
     500,423,160,22
@@ -90,6 +91,7 @@ for i = 1:length(e)
         'FontName','微软雅黑',...
         'HorizontalAlignment','left',...
         'FontSize',10,...
+        'Tag',e_tag{i},...
         'Units','pixels',...
         'Position',e_position(i,:),...
         'BackgroundColor','White');
@@ -125,21 +127,16 @@ uicontrol(hf,...
     'Position',[310,20,80,25],...
     'String','数据',...
 	'Value',1,...
+    'Tag','list',...
 	'CallBack',@data_cho,...
 	'UserData',1,...
     'FontSize',10);
 
-obj = findobj(gcf);
+guidata(hf,guihandles);
 
-function data_cho(a,b)
-global data_cell;
-global obj;
-val = get(obj(2),'Value');
-set(obj(22),'String',data_cell{val});
-
-function imp(a,b)
-global data_cell;
-global obj;
+% 导入数据函数
+function imp(cbo,handles)
+handles = guidata(cbo);
 [FileName,PathName,FilterIndex] = uigetfile(...
     {'*.txt','Text Data Files(*.txt)';...
     '*.xls','Excel 工作薄(*.xls)'});
@@ -162,39 +159,67 @@ tip = '第1组数据';
 for i=2:(s(1))
 	tip = strcat(tip,'|第',num2str(i),'组数据');
 end
-set(obj(2),'String',tip);
-set(obj(22),'String',data_cell{1});
+set(handles.list,'String',tip);
+set(handles.data,'String',data_cell{1});
 msgbox('导入成功','提示','warn');
 
-function run1(a,b)
-global obj;
-for i = 14:22
-    s = str2num(get(obj(i),'String'));
-    if isempty(s)
-	    warndlg('缺少输入参数！');
-	    return;
-    end
-end
-V = str2num(get(obj(22),'String'));
-n1 = 21:-1:14;
-for i=1:length(n1);
-    x(i) = str2num(get(obj(n1(i)),'String'));
-end
-[V_,u_c,v_,U,P_] = uncertainty(V,x(3:5),x(6:8),x(1),x(2));
-result = [v_,P_,U/1000000,V_,v_,u_c/1000000,V_];
-for i=7:13
-    set(obj(i),'String',result(i-6));
+mydata = guihandles(handles.figure);
+mydata.data_cell = data_cell;
+guidata(handles.figure,mydata);
+
+% 数据选择函函数
+function data_cho(cbo,handles)
+handles = guidata(cbo);
+if isfield(handles,'data_cell')==0
+    warndlg('没有数据！');
+else
+    val = get(handles.list,'Value');
+    set(handles.data,'String',handles.data_cell{val});
 end
 
-function outp(a,b)
-global obj;
-header = {'数据：','u1(^-6)','u2(^-6)','u3(^-6)','v1','v2','v3',...
-        'V','u_c','v','V','P','v','置信概率','包含因子'};
-n = [19:-1:7 21:-1:20];
-for i = 1:length(n)
-    str{i} = num2str(get(obj(n(i)),'String'));
+% 计算函数
+function run1(cbo,handles)
+handles = guidata(cbo);
+data    = str2num(get(handles.data,'String'));
+probability = str2num(get(handles.probability,'String'));
+divisor = str2num(get(handles.divisor,'String'));
+u1      = str2num(get(handles.u1,'String'));
+u2      = str2num(get(handles.u2,'String'));
+u3      = str2num(get(handles.u3,'String'));
+v1      = str2num(get(handles.v1,'String'));
+v2      = str2num(get(handles.v2,'String'));
+v3      = str2num(get(handles.v3,'String'));
+if isempty(data)||isempty(probability)||isempty(divisor)||isempty(u1)||isempty(u2)||isempty(u3)||isempty(v1)||isempty(v2)||isempty(v3)
+	warndlg('缺少输入参数！');
+	return;
 end
-a = num2str(get(obj(2),'Value'));
-values = {strcat('数据',a),str{1:9},strcat(str{10},'±',str{11}),str{12:15}};
-xlswrite(strcat(datestr(now,30),'.xls'),[header;values]);
+[V,u_c,v_,U] = uncertainty(data,[u1 u2 u3],[v1 v2 v3],divisor);
+set(handles.V,'String',V);
+set(handles.u_c,'String',u_c/1000000);
+set(handles.v,'String',v_);
+set(handles.result_1,'String',V);
+set(handles.result_2,'String',U/1000000);
+set(handles.P,'String',probability);
+set(handles.v_,'String',v_);
+
+% 保存数据函数
+function outp(cbo,handles)
+handles = guidata(cbo);
+data    = strcat('第',num2str(get(handles.list,'Value')),'组数据');
+u1 = str2num(get(handles.u1,'String'));
+u2 = str2num(get(handles.u2,'String'));
+u3 = str2num(get(handles.u3,'String'));
+v1 = str2num(get(handles.v1,'String'));
+v2 = str2num(get(handles.v2,'String'));
+v3 = str2num(get(handles.v3,'String'));
+V  = str2num(get(handles.V,'String'));
+u_c= str2num(get(handles.u_c,'String'));
+v  = str2num(get(handles.v,'String'));
+U  = str2num(get(handles.result_2,'String'));
+probability = str2num(get(handles.probability,'String'));
+divisor = str2num(get(handles.divisor,'String'));
+fid = fopen(strcat(datestr(now,'yyyy-mm-dd_HH-MM-ss'),'.txt'),'w');
+fprintf(fid,'%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\r\n','数据','u1(^-6)','u2(^-6)','u3(^-6)','v1','v2','v3','V','u_c','v','V','P','v','置信概率','包含因子');
+fprintf(fid,'%s\t%.4f\t%.4f\t%.4f\t%.4f\t%.4f\t%.4f\t%.6f\t%.6f\t%d\t%.6f±%.6f\t%.2f\t%d\t%.2f\t%.2f',data,u1,u2,u3,v1,v2,v3,V,u_c,v,V,U,probability,v,probability,divisor);
+fclose(fid);
 msgbox('保存成功','提示','warn');
