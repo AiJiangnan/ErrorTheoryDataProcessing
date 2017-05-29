@@ -1,7 +1,6 @@
 function subsubpage5
 clear all;
 clc
-global obj;
 
 %% 创建主界面
 s = get(0,'ScreenSize');% 获取计算机屏幕分辨率
@@ -12,6 +11,7 @@ hf = figure('Name','回归分析',...
     'Position',[x,y,710,450],...
     'MenuBar','none',...
     'Color','White',...
+    'Tag','figure',...
     'Resize','off');
 
 % 更改界面左上角图标
@@ -42,6 +42,7 @@ end
 
 % 文本框
 e = 1:2;
+e_tag = {'x','y'};
 e_position = [
     70,420,600,25
     70,390,600,25
@@ -54,6 +55,7 @@ for i = 1:length(e)
         'Units','pixels',...
         'Position',e_position(i,:),...
         'BackgroundColor','White',...
+        'Tag',e_tag{i},...
         'Min',1,'Max',3,...
         'HorizontalAlignment','left');
 end
@@ -63,6 +65,7 @@ uicontrol(hf,...
     'Position',[130,360,100,25],...
     'String','1|2|3|4|5|6|7|8',...
 	'Value',2,...
+    'Tag','list',...
     'FontSize',10,...
     'BackgroundColor','White');
 
@@ -91,16 +94,19 @@ end
 
 axes('Units','pixels',...
     'Position',[30,60,300,260],...
+    'Tag','v_axes',...
     'Box','on');
 
 axes('Units','pixels',...
     'Position',[370,60,300,260],...
+    'Tag','r_axes',...
     'Box','on');
 
-obj = findobj(gcf);
+guidata(hf,guihandles);
 
-function imp(a,b)
-global obj;
+% 导入数据函数
+function imp(cbo,handles)
+handles = guidata(cbo);
 [FileName,PathName,FilterIndex] = uigetfile(...
     {'*.txt','Text Data Files(*.txt)';...
      '*.xls','Excel 工作薄(*.xls)'});
@@ -112,20 +118,21 @@ if FilterIndex==1
 else
 	data = xlsread(strcat(PathName,FileName));
 end
-set(obj(10),'String',data(1,:));
-set(obj(9),'String',data(2,:));
+set(handles.x,'String',data(1,:));
+set(handles.y,'String',data(2,:));
 msgbox('导入成功','提示','warn');
 
-function run1(a,b)
-global obj;
-x = str2num(get(obj(10),'String'));
-y = str2num(get(obj(9),'String'));
+% 计算函数
+function run1(cbo,handles)
+handles = guidata(cbo);
+x = str2num(get(handles.x,'String'));
+y = str2num(get(handles.y,'String'));
 l = size(x);
 if l(1)>1
     x = x';
     y = y';
 end
-n = get(obj(8),'Value');
+n = get(handles.list,'Value');
 if isempty(x)||isempty(y)
 	warndlg('缺少输入参数！');
 	return;
@@ -136,19 +143,20 @@ for i=1:n
     I = [I b'];
 end
 [b,bint,r,rint,stats]=regress(y',I);
-axes(obj(3));
+axes(handles.v_axes);
 rcoplot(r,rint);
 title('');
 xlabel('');
 ylabel('');
 Y = polyval(b(end:-1:1),x);
-axes(obj(2));
+axes(handles.r_axes);
 plot(x,y,'k+',x,Y,'r');
 
-function outp(a,b)
-global obj;
-f1 = getframe(obj(3));
-f2 = getframe(obj(2));
+% 保存数据函数
+function outp(cbo,handles)
+handles = guidata(cbo);
+f1 = getframe(handles.v_axes);
+f2 = getframe(handles.r_axes);
 imwrite(f1.cdata,'残差分析结果.jpg','jpg')
 imwrite(f2.cdata,'拟合结果.jpg','jpg')
 msgbox('保存图像成功','提示','warn');

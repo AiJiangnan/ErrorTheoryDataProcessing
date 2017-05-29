@@ -43,6 +43,7 @@ end
 
 % 文本框
 e = 1:6;
+e_tag = {'A','L','P','m_result','inv_result','result'};
 e_position = [
     70,320,260,125
     70,190,260,125
@@ -59,6 +60,7 @@ for i = 1:length(e)
         'Units','pixels',...
         'Position',e_position(i,:),...
         'BackgroundColor','White',...
+        'Tag',e_tag{i},...
         'Min',1,'Max',3,...
         'HorizontalAlignment','left');
 end
@@ -84,18 +86,19 @@ for i = 1:length(b)
         'Position',b_position(i,:));
 end
 
-obj = findobj(gcf);
+guidata(hf,guihandles);
 
-function run1(a,b)
-global obj;
-A = str2num(get(obj(9),'String'));
-L = str2num(get(obj(8),'String'));
-P = str2num(get(obj(7),'String'));
+% 计算函数
+function run1(cbo,handles)
+handles = guidata(cbo);
+A = str2num(get(handles.A,'String'));
+L = str2num(get(handles.L,'String'));
+P = str2num(get(handles.P,'String'));
 if isempty(A)||isempty(L)||isempty(P)
 	warndlg('缺少输入参数！');
 	return;
 end
 [C,D,EX] = data_process4(A,L,P);
-set(obj(7),'String',num2str(C));
-set(obj(6),'String',num2str(D));
-set(obj(5),'String',num2str(EX));
+set(handles.m_result,'String',num2str(C));
+set(handles.inv_result,'String',num2str(D));
+set(handles.result,'String',num2str(EX));

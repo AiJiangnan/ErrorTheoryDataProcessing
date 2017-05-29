@@ -1,7 +1,6 @@
 function subsubpage4_1
 clear all;
 clc
-global obj;
 
 %% 创建主界面
 s = get(0,'ScreenSize');% 获取计算机屏幕分辨率
@@ -45,6 +44,7 @@ end
 
 % 文本框
 e = 1:8;
+e_tag = {'A','L','inv_esult','result','v_result','v_power','standard','standard_'};
 e_position = [
     70,320,280,125
     410,320,280,125
@@ -63,6 +63,7 @@ for i = 1:length(e)
         'Units','pixels',...
         'Position',e_position(i,:),...
         'BackgroundColor','White',...
+        'Tag',e_tag{i},...
         'Min',1,'Max',3,...
         'HorizontalAlignment','left');
 end
@@ -90,18 +91,21 @@ for i = 1:length(b)
         'Position',b_position(i,:));
 end
 
-obj = findobj(gcf);
+guidata(hf,guihandles);
 
-function run1(a,b)
-global obj;
-A = str2num(get(obj(11),'String'));
-L = str2num(get(obj(10),'String'));
+% 计算函数
+function run1(cbo,handles)
+handles = guidata(cbo);
+A = str2num(get(handles.A,'String'));
+L = str2num(get(handles.L,'String'));
 if isempty(A)||isempty(L)
 	warndlg('缺少输入参数！');
 	return;
 end
 [D,EX,V,V_,s,d_ux] = data_process3(A,L);
-result = {d_ux,s,V_,V,EX,D};
-for i=5:10
-    set(obj(i),'String',num2str(result{i-4}));
-end
+set(handles.inv_esult,'String',num2str(D));
+set(handles.result,'String',num2str(EX));
+set(handles.v_result,'String',num2str(V));
+set(handles.v_power,'String',num2str(V_));
+set(handles.standard,'String',num2str(s));
+set(handles.standard_,'String',num2str(d_ux));
